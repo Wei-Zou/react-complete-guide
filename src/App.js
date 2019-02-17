@@ -30,7 +30,14 @@ class App extends Component {
         { name: 'Max', age: 28 },
         { name: event.target.value, age: 29 },
         { name: 'Stephanie', age: 27 }
-      ]
+      ],
+      showPersons: false,
+    });
+  }
+
+  togglePersonsHandler = () => {
+    this.setState({
+      showPersons: !this.state.showPersons
     });
   }
 
@@ -49,22 +56,27 @@ class App extends Component {
         <p>This is really working!</p>
         <button
           style={style}
-          onClick={() => this.switchNameHandler('Maximilian') /* Can be inefficient compared with .bind approach */ }>
-          Switch Name
+          onClick={this.togglePersonsHandler}>
+          Toggle Persons
         </button>
-        <Person
-          name={this.state.persons[0].name}
-          age={this.state.persons[0].age} />
-        <Person
-          name={this.state.persons[1].name}
-          age={this.state.persons[1].age}
-          onClick={this.switchNameHandler.bind(this, 'Max!')}
-          onChange={this.nameChangedHandler}>
-            My Hobbies: Racing
-        </Person>
-        <Person
-          name={this.state.persons[2].name}
-          age={this.state.persons[2].age} />
+        {
+          this.state.showPersons && 
+          <div>
+            <Person
+              name={this.state.persons[0].name}
+              age={this.state.persons[0].age} />
+            <Person
+              name={this.state.persons[1].name}
+              age={this.state.persons[1].age}
+              onClick={this.switchNameHandler.bind(this, 'Max!')}
+              onChange={this.nameChangedHandler}>
+                My Hobbies: Racing
+            </Person>
+            <Person
+              name={this.state.persons[2].name}
+              age={this.state.persons[2].age} />
+          </div>
+        }
       </div>
     );
   }
