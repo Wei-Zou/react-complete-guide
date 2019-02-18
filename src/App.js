@@ -7,9 +7,9 @@ class App extends Component {
     super();
     this.state = {
       persons: [
-        { name: 'Max', age: 28 },
-        { name: 'Manu', age: 29 },
-        { name: 'Stephanie', age: 26 }
+        { id: 'person1', name: 'Max', age: 28 },
+        { id: 'person2', name: 'Manu', age: 29 },
+        { id: 'person3', name: 'Stephanie', age: 26 }
       ]
     };
   }
@@ -24,15 +24,23 @@ class App extends Component {
     });
   };
 
-  nameChangedHandler = (event) => {
-    this.setState({
-      persons: [
-        { name: 'Max', age: 28 },
-        { name: event.target.value, age: 29 },
-        { name: 'Stephanie', age: 27 }
-      ],
-      showPersons: false,
-    });
+  nameChangedHandler = (event, personId) => {
+    const personIndex = this.state.persons.findIndex((p) => p.id === personId);
+    if (personIndex === -1) {
+      return;
+    }
+
+    const person = { ...this.state.persons[personIndex], name: event.target.value };
+    const persons = [...this.state.persons];
+    persons[personIndex] = person;
+
+    this.setState({ persons });
+  }
+
+  deletePersonHandler = (personIndex) => {
+    const persons = [...this.state.persons];
+    persons.splice(personIndex, 1);
+    this.setState({ persons });
   }
 
   togglePersonsHandler = () => {
@@ -53,10 +61,17 @@ class App extends Component {
     let persons = null;
     if (this.state.showPersons) {
       persons = (
-        this.state.persons.map((person) =>
-          <Person
-            name={person.name}
-            age={person.age} />)
+        <div>
+          {
+            this.state.persons.map((person, index) =>
+              <Person
+                onClick={() => this.deletePersonHandler(index)}
+                name={person.name}
+                age={person.age}
+                key={person.id}
+                onChange={(event) => this.nameChangedHandler(event, person.id)} />)
+          }
+        </div>
       );
     }
 
